@@ -1,28 +1,48 @@
 (function(){
-	console.log('it works!');
-	removeNonMembers();
-	$(window).on('scrollDown', function(){
-		removeNonMembers();
-		console.log('execute!');
+	disableNonMembers();
+
+	// activate when user scrolls down page
+	var lastScrollTop = 0;
+	$(window).on('scroll', function(){
+		// check if scrolling down page
+		var st = $(this).scrollTop();
+		if ( st > lastScrollTop ) {
+			// reached 3/4 of the way down the page?
+			if ( st > executePoint(0.6) ) {
+				console.log('execute!');
+				disableNonMembers();
+			}
+		}
+		// reset scroll position
+		lastScrollTop = st;
 	});
-	// memberIntervalHandler = setInterval(removeNonMembers, 5000);
 })();
 
-function removeNonMembers(){
-	var peopleCards = $('#pymk-people-card').find('li');
-	var tmp = '';
-	peopleCards.each(function(index){
-		var $this = $(this);
-		console.log(index);
+/**
+ * Detects the non-members listed but button class
+ */
+ function disableNonMembers(){
+	// searches removes button for non-members to connect
+	// removes hover styles on contact card
+	var nonMemberCards = $('#pymk-people-card')
+		.find('.bt-invite')
+		.slideUp(1800, function(){
+			$(this).remove();
+		})
+		.closest('li.card')
+		.css({
+			'box-shadow': 'none',
+			'margin-top': '0',
+			'margin-bottom': '10px'
+		});
+ }
 
-		var checkMemberId = $this.data('member-id');
-		if (typeof checkMemberId == 'string') {
-			var memberFirstName = $this.data('first-name');
-			var memberLastName  = $this.data('last-name');
-			console.log(memberFirstName + ' ' + memberLastName + ' (' + checkMemberId + ') is a non-LinkedIn member.');
-			$this.slideUp(2500, function(){
-				$this.remove();
-			});
-		}
-	});
-}
+/**
+* Calculate scroll position for executing disableNonMembers()
+*/
+ function executePoint(distance){
+	// var contentBottom = $('#bt-pymk-showmore').offset().top;
+	var contentBottom = $(document).height() * distance;
+	console.log(contentBottom);
+	return contentBottom;
+ }

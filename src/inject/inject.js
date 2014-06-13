@@ -24,9 +24,9 @@
  function disableNonMembers(){
 	// searches removes button for non-members to connect
 	// removes hover styles on contact card
-	var nonMemberCards = $('#pymk-people-card')
-		.find('.bt-invite')
-		.slideUp(1800, function(){
+	var nonMemberCards = $('#pymk_cards_container')
+		.find('.guest .bt-request')
+		.fadeOut(1800, function(){
 			$(this).remove();
 		})
 		.closest('li.card')
